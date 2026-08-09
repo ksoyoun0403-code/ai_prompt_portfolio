@@ -1,0 +1,13 @@
+const menuButton=document.querySelector('.menu-button');
+const nav=document.querySelector('#site-nav');
+menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open',!open);document.body.classList.toggle('menu-open',!open)});
+nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');document.body.classList.remove('menu-open')}));
+const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');revealObserver.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -40px'});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+const navLinks=[...nav.querySelectorAll('a')];
+const sectionObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(link=>link.classList.toggle('active',link.getAttribute('href')===`#${entry.target.id}`))}}),{rootMargin:'-20% 0px -65%'});
+document.querySelectorAll('#introduction,#projects,#experience').forEach(section=>sectionObserver.observe(section));
+const topButton=document.querySelector('.top-button');
+window.addEventListener('scroll',()=>topButton.classList.toggle('visible',scrollY>700),{passive:true});
+topButton.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+document.querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{const box=document.createElement('div');box.className='media-placeholder';box.textContent=img.getAttribute('src');img.replaceWith(box)}));
